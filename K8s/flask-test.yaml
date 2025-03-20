@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-test
+  labels:
+    app: flask-deploy-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-temp-test
+  template:
+    metadata:
+      labels:
+        app: flask-temp-test
+    spec:
+      containers:
+        - name: flask-test
+          image: b4w4rzr1ng/flask-app-ingress:nginx1
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service-test
+spec:
+  selector:
+    app: flask-temp-test
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP

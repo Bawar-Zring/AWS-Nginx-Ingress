@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask
+  labels:
+    app: flask-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-temp
+  template:
+    metadata:
+      labels:
+        app: flask-temp
+    spec:
+      containers:
+        - name: flask
+          image: b4w4rzr1ng/my-flask-app:v2
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+spec:
+  selector:
+    app: flask-temp
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
