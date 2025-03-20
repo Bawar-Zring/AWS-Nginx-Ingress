@@ -63,7 +63,7 @@ If a user accesses `<external-ip>/app1/test`, the ingress will rewrite the path 
 
 
 ## Cleanup
-To remove the Nginx Ingress setup:
+To remove the Nginx Ingress, K8s resourse, AWS resourse:
 ```sh
 helm uninstall nginx-ingress
 kubectl delete -f /K8s
